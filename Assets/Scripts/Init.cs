@@ -7,10 +7,15 @@ public class Init : MonoBehaviour
     public Camera cam;
     public GameObject cube, playerSquad;
     private float cameraMoveSpeed = 3f;
-    private float xMouse;
-    private float yMouse;
+    //private float xMouse;
+    //private float yMouse;
+    void Awake()
+    {
+        Debug.Log("Awake");
+    }
     void Start()
     {
+        Debug.Log("Init Start");
         playerSquad.transform.position = new Vector3(-9, -5);
         for (int i = -9; i <= 9; i++)
         {
@@ -20,69 +25,62 @@ public class Init : MonoBehaviour
             }
         }
     }
+    IEnumerator move(Vector3 finalPoint)
+    {
+
+        if (finalPoint.y > playerSquad.transform.position.y)
+        {
+            playerSquad.transform.position.Set(playerSquad.transform.position.x, playerSquad.transform.position.y + 1, playerSquad.transform.position.z);
+        }
+        else if (finalPoint.x > playerSquad.transform.position.x)
+        {
+            playerSquad.transform.position.Set(playerSquad.transform.position.x + 1, playerSquad.transform.position.y, playerSquad.transform.position.z);
+        }
+        if (finalPoint.y < playerSquad.transform.position.y)
+        {
+            playerSquad.transform.position.Set(playerSquad.transform.position.x, playerSquad.transform.position.y - 1, playerSquad.transform.position.z);
+        }
+        else if (finalPoint.x < playerSquad.transform.position.x)
+        {
+            playerSquad.transform.position.Set(playerSquad.transform.position.x - 1, playerSquad.transform.position.y, playerSquad.transform.position.z);
+        }
+        yield return new WaitForSeconds(1);
+    }
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Mouse0))
+        if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            xMouse = Input.mousePosition.x;
-            yMouse = Input.mousePosition.y;
-            Vector2 pos = cam.ScreenToWorldPoint(new Vector2((int)xMouse, (int)yMouse));
-            Vector3 finalPoint = new Vector2(Mathf.Round(pos.x), Mathf.Round(pos.y));
-            while(finalPoint != playerSquad.transform.position)
+            Vector2 mousePosition = Input.mousePosition;
+            Vector2 pos = cam.ScreenToWorldPoint(mousePosition);
+            Vector3 finalPoint = new Vector3(pos.x, pos.y, 0);
+            while (finalPoint != playerSquad.transform.position)
             {
                 if (finalPoint.y > playerSquad.transform.position.y)
                 {
-                    playerSquad.transform.position = new Vector2(playerSquad.transform.position.x, playerSquad.transform.position.y + 1);
+                    playerSquad.transform.position.Set(playerSquad.transform.position.x, playerSquad.transform.position.y + 1, playerSquad.transform.position.z);
                 }
                 else if (finalPoint.x > playerSquad.transform.position.x)
                 {
-                    playerSquad.transform.position = new Vector2(playerSquad.transform.position.x + 1, playerSquad.transform.position.y);
-
+                    playerSquad.transform.position.Set(playerSquad.transform.position.x + 1, playerSquad.transform.position.y, playerSquad.transform.position.z);
                 }
                 if (finalPoint.y < playerSquad.transform.position.y)
                 {
-                    playerSquad.transform.position = new Vector2(playerSquad.transform.position.x, playerSquad.transform.position.y - 1);
+                    playerSquad.transform.position.Set(playerSquad.transform.position.x, playerSquad.transform.position.y - 1, playerSquad.transform.position.z);
                 }
                 else if (finalPoint.x < playerSquad.transform.position.x)
                 {
-                    playerSquad.transform.position = new Vector2(playerSquad.transform.position.x - 1, playerSquad.transform.position.y);
-
+                    playerSquad.transform.position.Set(playerSquad.transform.position.x - 1, playerSquad.transform.position.y, playerSquad.transform.position.z);
                 }
             }
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        if(Input.GetKey(KeyCode.Mouse1))
+        if (Input.GetKey(KeyCode.Mouse1))
         {
-            xMouse = Input.mousePosition.x;
-            yMouse = Input.mousePosition.y;
-            Vector2 pos = cam.ScreenToWorldPoint(new Vector2(xMouse, yMouse));
-            if(pos.x > cam.transform.position.x && pos.y > cam.transform.position.y)
+            Debug.Log("mouse pressed");
+            Vector2 mousePosition = Input.mousePosition;
+            Vector2 pos = cam.ScreenToWorldPoint(mousePosition);
+            if (pos.x > cam.transform.position.x && pos.y > cam.transform.position.y)
             {
-                cam.transform.position = new Vector3(cam.transform.position.x + cameraMoveSpeed * Time.deltaTime, cam.transform.position.y + cameraMoveSpeed * Time.deltaTime, -10f) ;
+                cam.transform.position = new Vector3(cam.transform.position.x + cameraMoveSpeed * Time.deltaTime, cam.transform.position.y + cameraMoveSpeed * Time.deltaTime, -10f);
             }
             if (pos.x < cam.transform.position.x && pos.y < cam.transform.position.y)
             {
@@ -97,5 +95,26 @@ public class Init : MonoBehaviour
                 cam.transform.position = new Vector3(cam.transform.position.x + cameraMoveSpeed * Time.deltaTime, cam.transform.position.y - cameraMoveSpeed * Time.deltaTime, -10f);
             }
         }
+        /* while (finalPoint != playerSquad.transform.position)
+         {
+             if (finalPoint.y > playerSquad.transform.position.y)
+             {
+                 playerSquad.transform.position = new Vector2(playerSquad.transform.position.x, playerSquad.transform.position.y + 1);
+             }
+             else if (finalPoint.x > playerSquad.transform.position.x)
+             {
+                 playerSquad.transform.position = new Vector2(playerSquad.transform.position.x + 1, playerSquad.transform.position.y);
+
+             }
+             if (finalPoint.y < playerSquad.transform.position.y)
+             {
+                 playerSquad.transform.position = new Vector2(playerSquad.transform.position.x, playerSquad.transform.position.y - 1);
+             }
+             else if (finalPoint.x < playerSquad.transform.position.x)
+             {
+                 playerSquad.transform.position = new Vector2(playerSquad.transform.position.x - 1, playerSquad.transform.position.y);
+
+             }
+         }*/
     }
 }
